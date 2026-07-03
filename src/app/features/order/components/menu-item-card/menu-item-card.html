@@ -1,0 +1,47 @@
+<article class="menu-item">
+    <h2 class="menu-item__heading">
+        <button type="button" class="menu-item__toggle" [class.menu-item__toggle--expanded]="expanded"
+            [id]="'item-heading-' + item.itemId" [attr.aria-expanded]="expanded"
+            [attr.aria-controls]="'item-panel-' + item.itemId" (click)="toggleItem()">
+            {{ item.name }}
+        </button>
+    </h2>
+
+    @if (expanded) {
+    <div class="menu-item__content" [id]="'item-panel-' + item.itemId" role="region"
+        [attr.aria-labelledby]="'item-heading-' + item.itemId">
+        <div class="menu-item__sizes">
+            @for (size of item.sizes; track size.sizeId) {
+            <div class="menu-size">
+                <label class="menu-size__label" [for]="'size-' + item.itemId + '-' + size.sizeId">
+                    <input type="checkbox" class="menu-size__checkbox" [id]="'size-' + item.itemId + '-' + size.sizeId"
+                        [checked]="size.selected" (change)="onSizeSelectionChange(size.sizeId, $event)" />
+
+                    <span>{{ size.name }}</span>
+                </label>
+
+                <label class="menu-size__price-field" [for]="'price-' + item.itemId + '-' + size.sizeId">
+                    <span aria-hidden="true">$</span>
+
+                    <span class="visually-hidden">
+                        {{ size.name }}
+                    </span>
+
+                    <input type="text" inputmode="decimal" autocomplete="off" class="menu-size__price-input"
+                        [id]="'price-' + item.itemId + '-' + size.sizeId" [value]="size.price.toFixed(2)"
+                        [disabled]="!size.selected" (input)="onPriceInput($event)"
+                        (change)="onPriceChange(size.sizeId, size.price, $event)" />
+                </label>
+            </div>
+            }
+
+            @if (hasChanges) {
+            <button type="button" class="menu-item__undo" [attr.aria-label]="'Undo changes for ' + item.name"
+                (click)="undoChanges()">
+                Undo
+            </button>
+            }
+        </div>
+    </div>
+    }
+</article>

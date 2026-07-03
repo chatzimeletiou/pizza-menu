@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+
+.pizza-menu-page {
+  width: 100%;
+  padding: 48px 24px;
+}
+
+.pizza-menu-page > section {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+#pizza-menu-title {
+  margin: 0 0 24px;
+  color: #292b3d;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .pizza-menu-page {
+    padding: 24px 16px;
+  }
+
+  #pizza-menu-title {
+    margin-bottom: 16px;
+    font-size: 28px;
+  }
+
+  .menu-list {
+    gap: 12px;
+  }
+}

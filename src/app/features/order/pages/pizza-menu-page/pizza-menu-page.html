@@ -1,0 +1,19 @@
+<main class="pizza-menu-page">
+  <section aria-labelledby="pizza-menu-title">
+    <h1 id="pizza-menu-title">Pizza</h1>
+
+    <div class="menu-list">
+      @for (item of menuItems; track item.itemId) {
+        <app-menu-item-card
+          [item]="item"
+          [expanded]="isItemExpanded(item.itemId)"
+          [hasChanges]="hasItemChanges(item.itemId)"
+          (toggled)="toggleItem($event)"
+          (sizeSelectionChanged)="onSizeSelectionChange($event)"
+          (priceChanged)="onPriceChange($event)"
+          (undoRequested)="undoItem($event)"
+        />
+      }
+    </div>
+  </section>
+</main>
