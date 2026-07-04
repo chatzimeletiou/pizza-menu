@@ -1,7 +1,9 @@
 import { itemPrices, items, itemSizes } from './data';
 import { MenuItemViewModel } from '../models/menu.models';
 
+// Μετατρεπει τα αρχικα data σε μορφη που χρειαζομαστε
 export function buildMenuItems(): MenuItemViewModel[] {
+  // Map με το sizeId,name
   const sizeNameById = new Map(
     itemSizes.map(size => [size.sizeId, size.name])
   );

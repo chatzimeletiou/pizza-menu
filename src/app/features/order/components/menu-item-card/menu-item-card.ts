@@ -9,18 +9,27 @@ import { MenuItemViewModel, PriceChange, SizeSelectionChange } from '../../model
     styleUrl: './menu-item-card.scss'
 })
 export class MenuItemCardComponent {
+    // Data της συγκεκριμένης πίτσας
     @Input({ required: true }) item!: MenuItemViewModel;
+    // Αν η κάρτελα πρέπει να είναι ανοιχτή
     @Input() expanded = false;
+    // Aν η πιτσα εχει αλλαγες, χρηση για Undo
     @Input() hasChanges = false;
+    // Button καρτέλας
     @Output() toggled = new EventEmitter<number>();
+    // Αλλαγη σε checkbox
     @Output() sizeSelectionChanged = new EventEmitter<SizeSelectionChange>();
+    // Αλλαγή τιμής
     @Output() priceChanged = new EventEmitter<PriceChange>();
+    // Ενημερωνει το parent για Undo
     @Output() undoRequested = new EventEmitter<number>();
 
+    // Ανοιγει η κλεινει η καρτέλα
     protected toggleItem(): void {
         this.toggled.emit(this.item.itemId);
     }
 
+    // Καλείται οταν ο χρηστης αλλαξει ενα checkbox
     protected onSizeSelectionChange(sizeId: number, event: Event): void {
         const checkbox = event.target as HTMLInputElement;
 
@@ -31,19 +40,28 @@ export class MenuItemCardComponent {
         });
     }
 
+    // Οταν αλλαγη τιμής
     protected onPriceChange(sizeId: number, currentPrice: number, event: Event): void {
         const input = event.target as HTMLInputElement;
 
+        // Αν ο χρηστης σβησει την τιμη τη μετατρεπει σε μηδεν
         if (input.value.trim() === '') {
-            input.value = currentPrice.toFixed(2);
+            input.value = '0.00';
+            this.priceChanged.emit({
+                itemId: this.item.itemId,
+                sizeId,
+                price: 0
+            });
             return;
         }
         const price = Number(input.value);
 
+        // Αν η τιμη δεν ειναι εγκυρη κραταει την προηγουμενη τιμη
         if (!Number.isFinite(price) || price < 0) {
             input.value = currentPrice.toFixed(2);
             return;
         }
+        // Κραταει την τιμη μεχρι δυο δεκαδικα
         const normalizedPrice = Number(price.toFixed(2));
         input.value = normalizedPrice.toFixed(2);
 
@@ -58,6 +76,8 @@ export class MenuItemCardComponent {
         this.undoRequested.emit(this.item.itemId);
     }
 
+    // Ελεγχει το value του input οσο εχει νεα τιμή
+    // Κραταει μονο εγκυρους αριθμους και μεχρι δυο δεκαδικα
     protected onPriceInput(event: Event): void {
         const input = event.target as HTMLInputElement;
 

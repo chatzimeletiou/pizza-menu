@@ -23,9 +23,7 @@
                 <label class="menu-size__price-field" [for]="'price-' + item.itemId + '-' + size.sizeId">
                     <span aria-hidden="true">$</span>
 
-                    <span class="visually-hidden">
-                        {{ size.name }}
-                    </span>
+                    <span class="visually-hidden"> {{ size.name }} </span>
 
                     <input type="text" inputmode="decimal" autocomplete="off" class="menu-size__price-input"
                         [id]="'price-' + item.itemId + '-' + size.sizeId" [value]="size.price.toFixed(2)"
