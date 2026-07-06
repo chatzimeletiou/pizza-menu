@@ -12,34 +12,29 @@ import { MenuStorageService } from '../../services/menu-storage.service';
     styleUrl: './pizza-menu-page.scss'
 })
 export class PizzaMenuPageComponent {
-    //το state του menu
     protected menuItems: MenuItemViewModel[];
-    // αρχικο state για το Undo
     private readonly initialMenuItems: MenuItemViewModel[];
-    //id του item που ειναι ανοιχτο
     protected expandedItemId: number | null;
 
     constructor(
         private readonly menuStorageService: MenuStorageService
     ) {
-        // φορτωνει state απο το localStorage και φτιαχνει 2 αντίγραφα
         const loadedMenuItems = this.menuStorageService.load() ?? buildMenuItems();
+        // Creates separate copies for the editable state and Undo state
         this.menuItems = structuredClone(loadedMenuItems);
         this.initialMenuItems = structuredClone(loadedMenuItems);
         this.expandedItemId = this.menuItems[0]?.itemId ?? null;
     }
 
-    // ανοιγει/κλεινει το item & Οταν ανοιγει το άλλο κλεινει
     protected toggleItem(itemId: number): void {
         this.expandedItemId = this.expandedItemId === itemId ? null : itemId;
     }
 
-    // Ελεγχει αν το συγκεκριμενο item ειναι ανοιχτο
     protected isItemExpanded(itemId: number): boolean {
         return this.expandedItemId === itemId;
     }
 
-    // ενημερωνει το state οταν αλλαζει ενα checkbox 
+    // Updates the state when a checkbox changes
     protected onSizeSelectionChange(change: SizeSelectionChange): void {
         this.menuItems = this.menuItems.map(item => {
             if (item.itemId !== change.itemId) {
@@ -55,7 +50,7 @@ export class PizzaMenuPageComponent {
                     return {
                         ...size,
                         selected: change.selected,
-                        // Οταν το size γινει disabled η τιμη γινεται μηδεν
+                        // Sets the price to zero when the size is disabled
                         price: change.selected ? size.price : 0
                     };
                 })
@@ -64,8 +59,8 @@ export class PizzaMenuPageComponent {
         this.saveMenuItems();
     }
 
-    // Καλείται όταν αλλάζει η τιμή μιας πιτσας
-    // Ενημερώνει το σωστό item και αποθηκευει το νέο state 
+    // Called when the price of a pizza size changes
+    // Updates the correct item and saves the new state
     protected onPriceChange(change: PriceChange): void {
         this.menuItems = this.menuItems.map(item => {
             if (item.itemId !== change.itemId) {
@@ -83,10 +78,9 @@ export class PizzaMenuPageComponent {
         this.saveMenuItems();
     }
 
-    // Αποφασίζει αν το Undo πρέπει να φαίνεται 
-    // Καλείται απο το template για καθε item 
-    // Συγκρινει το current state με το initial state
-    // Αν υπαρχουν αλλαγες επιστρεφει true και εμφανιζει το Undo
+    // Decides if the Undo button should be displayed
+    // Compares the current state with the initial state
+    // Returns true when the item has changes
     protected hasItemChanges(itemId: number): boolean {
         const currentItem = this.menuItems.find(
             item => item.itemId === itemId
@@ -102,9 +96,9 @@ export class PizzaMenuPageComponent {
         return JSON.stringify(currentItem) !== JSON.stringify(initialItem);
     }
 
-    // Καλείται οταν το child component οταν πατηθει undo
-    // Κανει Undo μονο στη συγκεκριμενη πιτσα
-    // Και αποθηκευει το νεο state
+    // Called when the Undo button is clicked
+    // Restores only the selected pizza
+    // Saves the new state
     protected undoItem(itemId: number): void {
         const initialItem = this.initialMenuItems.find(
             item => item.itemId === itemId

@@ -23,4 +23,14 @@ The project was created as part of a front-end assignment and follows the provid
 - npm
 - Angular CLI 20
 
+## Accessibility
+The application uses semantic HTML native form controls ARIA attributes visible focus styles and reduced motion support following WCAG 2.1 AA guidelines
+
+## Run locally
+Install the dependencies
+
+```bash
+npm install
+ng serve
+Open http://localhost:4200
 

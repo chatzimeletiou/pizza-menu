@@ -23,6 +23,7 @@
                 <label class="menu-size__price-field" [for]="'price-' + item.itemId + '-' + size.sizeId">
                     <span aria-hidden="true">$</span>
 
+                    <!-- Hidden label for screen readers to support WCAG 2.1 AA accessibility -->
                     <span class="visually-hidden"> {{ size.name }} </span>
 
                     <input type="text" inputmode="decimal" autocomplete="off" class="menu-size__price-input"
